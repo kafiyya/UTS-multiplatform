@@ -16,6 +16,7 @@ Aplikasi memiliki dua peran pengguna:
 - Sesi login tersimpan, sehingga tidak perlu login ulang saat aplikasi dibuka kembali
 - Dashboard daftar alat beserta kategori dan status (Tersedia / Dipinjam)
 - Tambah alat baru (khusus Pengurus)
+- Hapus data alat (khusus Pengurus)
 - Pengajuan peminjaman alat dengan mengisi nama/NIM dan keperluan (Peminjam)
 - Pencatatan pengembalian alat (Pengurus)
 - Logout
@@ -85,7 +86,7 @@ assets/
 
 ## Pembuat
 
-- Nama: **Kahfiyya Nurzahra Hartono**
-- NIM: **240605110053**
-- Program Studi Teknik Informatika, Fakultas Sains dan Teknologi
-- Universitas Islam Negeri Maulana Malik Ibrahim Malang
+Nama: **Kahfiyya Nurzahra Hartono**
+NIM: **240605110053**
+Program Studi Teknik Informatika, Fakultas Sains dan Teknologi
+Universitas Islam Negeri Maulana Malik Ibrahim Malang
