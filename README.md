@@ -86,7 +86,7 @@ assets/
 
 ## Pembuat
 
-Nama: **Kahfiyya Nurzahra Hartono**
-NIM: **240605110053**
-Program Studi Teknik Informatika, Fakultas Sains dan Teknologi
-Universitas Islam Negeri Maulana Malik Ibrahim Malang
+- Nama: **Kahfiyya Nurzahra Hartono**
+- NIM: **240605110053**
+- Program Studi Teknik Informatika, Fakultas Sains dan Teknologi
+- Universitas Islam Negeri Maulana Malik Ibrahim Malang
