@@ -66,4 +66,13 @@ class DatabaseHelper {
       whereArgs: [id],
     );
   }
+  // Fungsi baru khusus untuk menghapus data alat dari database
+  static Future<int> hapusAlat(int id) async {
+    final db = await database;
+    return await db.delete(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
 }

@@ -18,6 +18,8 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+    // Perbaikan Bug: Inisialisasi awal listAlat agar tidak terjadi LateInitializationError
+    listAlat = DatabaseHelper.getSemuaAlat();
     _loadData();
   }
 
@@ -33,6 +35,13 @@ class _DashboardPageState extends State<DashboardPage> {
   Future<void> _logout() async {
     await PrefsHelper.clearUser();
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+  }
+
+  // Fungsi memanggil penghapusan dari database
+  Future<void> _hapusAlat(int id) async {
+    await DatabaseHelper.hapusAlat(id);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data alat berhasil dihapus.')));
+    _loadData();
   }
 
   @override
@@ -61,16 +70,51 @@ class _DashboardPageState extends State<DashboardPage> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     var alat = snapshot.data![index];
+                    bool isDipinjam = alat['status'] == 'Dipinjam';
+
                     return Card(
                       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: ListTile(
                         leading: Icon(Icons.camera_alt),
                         title: Text(alat['nama_alat']),
-                        subtitle: Text(alat['status'] == 'Dipinjam'
+                        subtitle: Text(isDipinjam
                             ? '${alat['kategori']} - Dipinjam oleh ${alat['peminjam']}'
                             : '${alat['kategori']} - ${alat['status']}'),
-                        trailing: Icon(alat['status'] == 'Tersedia' ? Icons.check_circle : Icons.cancel,
-                            color: alat['status'] == 'Tersedia' ? Colors.green : Colors.red),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(isDipinjam ? Icons.cancel : Icons.check_circle,
+                                color: isDipinjam ? Colors.red : Colors.green),
+
+                            // Tombol Hapus: Hanya muncul jika userRole adalah Admin
+                            if (userRole == 'Pengurus (Admin)') ...[
+                              SizedBox(width: 8),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  // Memunculkan pop-up konfirmasi sebelum hapus permanen
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: Text('Hapus Data Alat?'),
+                                        content: Text('Yakin ingin menghapus ${alat['nama_alat']} dari inventaris?'),
+                                        actions: [
+                                          TextButton(onPressed: () => Navigator.pop(context), child: Text('Batal')),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                _hapusAlat(alat['id']);
+                                              },
+                                              child: Text('Hapus', style: TextStyle(color: Colors.red))
+                                          ),
+                                        ],
+                                      )
+                                  );
+                                },
+                              )
+                            ]
+                          ],
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -86,7 +130,6 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-      // Tombol tambah disembunyikan (null) jika perannya bukan Pengurus
       floatingActionButton: userRole == 'Pengurus (Admin)'
           ? FloatingActionButton(
         child: Icon(Icons.add),
